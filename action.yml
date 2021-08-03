@@ -2,6 +2,10 @@ name: "FVTT Release Packager"
 description: "Creates installable FVTT modules based on Github releases"
 author: "Sebastian Will"
 
+branding:
+  icon: "box"
+  color: "red"
+
 inputs:
   GITHUB_TOKEN:
     description: "GitHub token"
