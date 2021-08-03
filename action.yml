@@ -1,0 +1,12 @@
+name: "FVTT Release Packager"
+description: "Creates installable FVTT modules based on Github releases"
+author: "Sebastian Will"
+
+inputs:
+  GITHUB_TOKEN:
+    description: "GitHub token"
+    required: true
+
+runs:
+  using: "node12"
+  main: "dist/index.js"
