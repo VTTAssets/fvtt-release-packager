@@ -45,27 +45,29 @@ const update = async (metaData) => {
   manifest.download = `https://github.com/${metaData.repository.owner}/${metaData.repository.name}/releases/download/${metaData.release.tagName}/${metaData.repository.name}-v${metaData.release.version}.zip`;
 
   // go through all depencendies
-  manifest.dependencies = await Promise.all(
-    manifest.dependencies.map(async (dependency) => {
-      const update = await retrieveDependencyInformation(dependency);
-      if (update.version && update.download) {
-        console.log(
-          `Dependency ${dependency.name}: Updated to ${update.version}@${update.download}`
-        );
-        return {
-          name: dependency.name,
-          manifest: dependency.manifest,
-          version: update.version,
-          download: update.download,
-        };
-      } else {
-        console.log(
-          `Dependency ${dependency.name}: No update information retrieved`
-        );
-        return dependency;
-      }
-    })
-  );
+  if (manifest.dependencies && manifest.dependencies.length) {
+    manifest.dependencies = await Promise.all(
+      manifest.dependencies.map(async (dependency) => {
+        const update = await retrieveDependencyInformation(dependency);
+        if (update.version && update.download) {
+          console.log(
+            `Dependency ${dependency.name}: Updated to ${update.version}@${update.download}`
+          );
+          return {
+            name: dependency.name,
+            manifest: dependency.manifest,
+            version: update.version,
+            download: update.download,
+          };
+        } else {
+          console.log(
+            `Dependency ${dependency.name}: No update information retrieved`
+          );
+          return dependency;
+        }
+      })
+    );
+  }
 
   // update the manifest file in the GITHUB_WORKSPACE
   fs.writeFileSync(manifestFilename, JSON.stringify(manifest, null, 3), {
